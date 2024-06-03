@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class RadioTest {
+public class RadioTest {
     private Radio radio;
 
     @BeforeEach
@@ -13,83 +13,113 @@ class RadioTest {
         radio = new Radio();
     }
 
+    // Тесты для метода setCurrentStation
     @Test
-    public void testSetCurrentStationValid() {
-        radio.setCurrentStation(5);
-        assertEquals(5, radio.getCurrentStation());
+    public void testSetCurrentStationLowerBound() {
+        radio.setCurrentStation(0);
+        assertEquals(0, radio.getCurrentStation());
     }
 
     @Test
-    public void testSetCurrentStationInvalid() {
+    public void testSetCurrentStationUpperBound() {
+        radio.setCurrentStation(9);
+        assertEquals(9, radio.getCurrentStation());
+    }
+
+    @Test
+    public void testSetCurrentStationBelowLowerBound() {
+        radio.setCurrentStation(-1);
+        assertEquals(0, radio.getCurrentStation());
+    }
+
+    @Test
+    public void testSetCurrentStationAboveUpperBound() {
         radio.setCurrentStation(10);
-        assertEquals(0, radio.getCurrentStation()); // Номер станции не изменится, так как 10 недопустимое значение
+        assertEquals(0, radio.getCurrentStation());
     }
 
+    // Тесты для метода nextStation
     @Test
-    public void testNextStation() {
+    public void testNextStationAtUpperBound() {
         radio.setCurrentStation(9);
         radio.nextStation();
         assertEquals(0, radio.getCurrentStation());
     }
 
     @Test
-    public void testNextStationNormal() {
+    public void testNextStationBelowUpperBound() {
         radio.setCurrentStation(8);
         radio.nextStation();
         assertEquals(9, radio.getCurrentStation());
     }
 
+    // Тесты для метода prevStation
     @Test
-    public void testPrevStation() {
+    public void testPrevStationAtLowerBound() {
         radio.setCurrentStation(0);
         radio.prevStation();
         assertEquals(9, radio.getCurrentStation());
     }
 
     @Test
-    public void testPrevStationNormal() {
+    public void testPrevStationAboveLowerBound() {
         radio.setCurrentStation(1);
         radio.prevStation();
         assertEquals(0, radio.getCurrentStation());
     }
 
+    // Тесты для метода setCurrentVolume
     @Test
-    public void testIncreaseVolume() {
-        radio.setCurrentVolume(99);
-        radio.increaseVolume();
+    public void testSetCurrentVolumeLowerBound() {
+        radio.setCurrentVolume(0);
+        assertEquals(0, radio.getCurrentVolume());
+    }
+
+    @Test
+    public void testSetCurrentVolumeUpperBound() {
+        radio.setCurrentVolume(100);
         assertEquals(100, radio.getCurrentVolume());
     }
 
     @Test
-    public void testIncreaseVolumeMax() {
+    public void testSetCurrentVolumeBelowLowerBound() {
+        radio.setCurrentVolume(-1);
+        assertEquals(50, radio.getCurrentVolume()); // предполагаемое значение по умолчанию 50
+    }
+
+    @Test
+    public void testSetCurrentVolumeAboveUpperBound() {
+        radio.setCurrentVolume(101);
+        assertEquals(50, radio.getCurrentVolume()); // предполагаемое значение по умолчанию 50
+    }
+
+    // Тесты для метода increaseVolume
+    @Test
+    public void testIncreaseVolumeAtUpperBound() {
         radio.setCurrentVolume(100);
         radio.increaseVolume();
         assertEquals(100, radio.getCurrentVolume());
     }
 
     @Test
-    public void testDecreaseVolume() {
-        radio.setCurrentVolume(1);
-        radio.decreaseVolume();
-        assertEquals(0, radio.getCurrentVolume());
+    public void testIncreaseVolumeBelowUpperBound() {
+        radio.setCurrentVolume(99);
+        radio.increaseVolume();
+        assertEquals(100, radio.getCurrentVolume());
     }
 
+    // Тесты для метода decreaseVolume
     @Test
-    public void testDecreaseVolumeMin() {
+    public void testDecreaseVolumeAtLowerBound() {
         radio.setCurrentVolume(0);
         radio.decreaseVolume();
         assertEquals(0, radio.getCurrentVolume());
     }
 
     @Test
-    public void testSetVolumeValid() {
-        radio.setCurrentVolume(50);
-        assertEquals(50, radio.getCurrentVolume());
-    }
-
-    @Test
-    public void testSetVolumeInvalid() {
-        radio.setCurrentVolume(150);
-        assertEquals(50, radio.getCurrentVolume()); // предполагаемое значение по умолчанию 50
+    public void testDecreaseVolumeAboveLowerBound() {
+        radio.setCurrentVolume(1);
+        radio.decreaseVolume();
+        assertEquals(0, radio.getCurrentVolume());
     }
 }
